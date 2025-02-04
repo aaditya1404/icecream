@@ -42,6 +42,42 @@ const iceCreams: IceCream[] = [
         rating: 4.9,
         image: "https://via.placeholder.com/250x150.png?text=Cookie+Craze",
     },
+    // New Ice Creams Added
+    {
+        id: 6,
+        name: "Caramel Crunch",
+        flavor: "Caramel",
+        rating: 4.7,
+        image: "https://via.placeholder.com/250x150.png?text=Caramel+Crunch",
+    },
+    {
+        id: 7,
+        name: "Minty Fresh",
+        flavor: "Mint Chocolate",
+        rating: 4.6,
+        image: "https://via.placeholder.com/250x150.png?text=Minty+Fresh",
+    },
+    {
+        id: 8,
+        name: "Berry Blast",
+        flavor: "Mixed Berries",
+        rating: 4.8,
+        image: "https://via.placeholder.com/250x150.png?text=Berry+Blast",
+    },
+    {
+        id: 9,
+        name: "Pistachio Paradise",
+        flavor: "Pistachio",
+        rating: 4.7,
+        image: "https://via.placeholder.com/250x150.png?text=Pistachio+Paradise",
+    },
+    {
+        id: 10,
+        name: "Coconut Dream",
+        flavor: "Coconut",
+        rating: 4.5,
+        image: "https://via.placeholder.com/250x150.png?text=Coconut+Dream",
+    },
 ];
 
 export const getIceCreams = (): Promise<IceCream[]> => {
