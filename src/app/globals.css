@@ -6,6 +6,8 @@ body {
   background-image: linear-gradient(rgb(172, 131, 172), rgb(253, 253, 253));
   background-size: cover;
   background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
 }
