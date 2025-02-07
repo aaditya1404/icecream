@@ -19,6 +19,23 @@ import {
 } from "firebase/firestore";
 import { firestore as db } from "./clientApp";
 
+
+interface AppUserModel {
+  uid:string
+  name: string;
+  phone: string;
+  photoURL: string;
+}
+
+interface Review {
+  reviewId: string;
+  authorUserId: string;
+  isGood: boolean;
+  productId: string;
+  text: string;
+  createdAt: any; 
+}
+
 // -----------------------------
 // USERS COLLECTION FUNCTIONS
 // -----------------------------
@@ -32,7 +49,7 @@ export async function addUser(
   userData: Record<string, any>
 ): Promise<DocumentReference> {
   try {
-    const userRef = await addDoc(collection(db, "users"), {
+    const userRef = await addDoc(collection(db, "appUsers"), {
       ...userData,
       createdAt: Timestamp.now(),
     });
@@ -52,8 +69,11 @@ export async function getUserById(
   userId: string
 ): Promise<Record<string, any> | null> {
   if (!userId) throw new Error("Invalid userId");
-  const userDocRef = doc(db, "users", userId);
+  const userDocRef = doc(db, "appUsers", userId);
+  console.log("userDocRef" ,userDocRef);
   const docSnap = await getDoc(userDocRef);
+  console.log(docSnap.id);
+  console.log("userDocSnap",docSnap.data());
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() };
   }
@@ -126,6 +146,7 @@ export async function getProducts(): Promise<Array<Record<string, any>>> {
     return querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
+      createdAt: doc.data().createdAt ? doc.data().createdAt.toDate().toISOString() : null,
     }));
   } catch (error) {
     console.error("Error getting products:", error);
@@ -168,25 +189,27 @@ export async function updateProductImageReference(
 // REVIEWS COLLECTION FUNCTIONS
 // -----------------------------
 
-/**
- * Add a review to the "reviews" collection.
- * @param reviewData - Object containing text, productId, authorUserId, isGood, etc.
- * @returns The reference to the newly added review document.
- */
 export async function addReview(
-  reviewData: Record<string, any>
-): Promise<DocumentReference> {
+  reviewData: Omit<Review, "reviewId" | "createdAt"> 
+): Promise<Review> {
   try {
     const reviewRef = await addDoc(collection(db, "reviews"), {
       ...reviewData,
-      createdAt: Timestamp.now(),
+      createdAt: Timestamp.now(), 
     });
-    return reviewRef;
+
+    return {
+      reviewId: reviewRef.id,
+      ...reviewData,
+      createdAt: Timestamp.now().toDate().toISOString(), 
+    };
   } catch (error) {
     console.error("Error adding review:", error);
     throw error;
   }
 }
+
+
 
 /**
  * Retrieve reviews for a given product ID.
@@ -266,11 +289,18 @@ export async function getFlavorRequests(): Promise<Array<Record<string, any>>> {
       orderBy("createdAt", "desc")
     );
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: (doc.data().createdAt as Timestamp).toDate(),
-    }));
+    return querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        createdByUserId: data.createdByUserId,
+        description: data.description,
+        flavorName: data.flavorName,
+        referenceURL: data.referenceURL,
+        voteUserIds: data.voteUserIds,
+        votes: data.votes,
+      };
+    });
   } catch (error) {
     console.error("Error getting flavor requests:", error);
     throw error;

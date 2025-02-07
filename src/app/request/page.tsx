@@ -1,9 +1,12 @@
+import AddFlavorRequestForm from '@/components/AddFlavorRequestForm'
+import FlavorRequest from '@/components/FlavorRequest'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      Request page
+      <FlavorRequest />
+      <AddFlavorRequestForm />
     </div>
   )
 }

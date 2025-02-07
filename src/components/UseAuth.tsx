@@ -1,60 +1,48 @@
-// components/UseAuth.tsx
 "use client";
-// import { useEffect } from 'react';
-// import { useDispatch } from 'react-redux';
-// import { setUser, setLoading } from '../redux/userSlice';
-// import { auth } from '../firebase/clientApp';
 
-// const UseAuth = () => {
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged((user) => {
-//       dispatch(setLoading(false));
-//       if (user) {
-//         dispatch(setUser(user));
-//       } else {
-//         dispatch(setUser(null));
-//       }
-//     });
-
-//     return () => unsubscribe(); // Cleanup on component unmount
-//   }, [dispatch]);
-
-//   return null; // You can choose to return a loading state or null
-// };
-
-// export default UseAuth;
-
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setUser, setLoading } from '../redux/userSlice';
-import { auth } from '../firebase/clientApp';  // Ensure Firebase is initialized
+import { setAppUser, setLoading } from '../redux/appUserSlice';
+import { auth } from '../firebase/clientApp'; 
+
+interface UserData {
+  uid: string;
+  name: string;
+  photoURL: string;
+}
 
 const UseAuth = () => {
+
   const dispatch = useDispatch();
+  const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
+    dispatch(setLoading(true));
 
-    // Subscribe to the authentication state change
     const unsubscribe = auth.onAuthStateChanged((user) => {
       dispatch(setLoading(false));
+
       if (user) {
-        // Store only necessary data (uid, email, etc.)
         const userData = {
-          uid: user.uid,
-          email: user.email,
+          uid: user?.uid ?? "",
+          name: user?.phoneNumber ?? "",
+          photoURL : user?.photoURL ?? ""
         };
-        dispatch(setUser(userData));
+        
+        setUser(userData);
+        dispatch(setAppUser(userData));
       } else {
-        dispatch(setUser(null)); // Clear user data if not logged in
+
+        setUser(null);
+        dispatch(setAppUser(null)); 
       }
+
     });
 
-    return () => unsubscribe(); // Clean up listener on component unmount
+    return () => unsubscribe(); 
   }, [dispatch]);
 
-  return null; // You can return null or a loading state
+  return null;
 };
 
 export default UseAuth;

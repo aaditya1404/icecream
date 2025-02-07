@@ -41,7 +41,7 @@ export async function updateUserPhoto(
  * @param image - The image file to upload.
  * @returns A Promise that resolves with the download URL of the uploaded image.
  */
-async function uploadUserPhoto(userId: string, image: File): Promise<string> {
+export async function uploadUserPhoto(userId: string, image: File): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     // Define a storage reference for the user's photo.
     // For example: "users/{userId}/{imageName}"
