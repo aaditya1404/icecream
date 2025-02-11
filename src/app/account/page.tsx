@@ -4,7 +4,7 @@ import React from 'react'
 const page = () => {
   
   return (
-    <div>
+    <div className='z-0 overflow-hidden h-screen'>
       <Login />
     </div>
   )

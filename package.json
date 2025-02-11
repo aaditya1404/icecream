@@ -11,9 +11,11 @@
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.12.3",
     "@reduxjs/toolkit": "^2.5.1",
+    "@svgr/webpack": "^8.1.0",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.1.0",
     "firebase-functions": "^6.3.1",
+    "framer-motion": "^12.4.1",
     "next": "^15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

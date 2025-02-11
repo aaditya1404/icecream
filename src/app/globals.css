@@ -3,11 +3,147 @@
 @tailwind utilities;
 
 body {
-  background-image: linear-gradient(rgb(172, 131, 172), rgb(253, 253, 253));
+  background-image: linear-gradient(#2f3e0d, #121904);
   background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
   margin: 0;
   padding: 0;
+}
+.parabolic-card {
+  transition: transform 0.3s ease-out;
+}
+
+/* Main Container */
+.main-container {
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Horizontal Scroll Container */
+/* .scroll-container {
+  display: flex;
+  position: relative;
+  overflow-x: scroll;
+  height: 400px;
+  width: 100vw;
+  scrollbar-width: none;
+} */
+
+.scroll-container {
+  display: flex;
+  position: relative;
+  overflow-x: scroll;
+  height: 400px;
+  width: 100vw;
+  scrollbar-width: none;
+  transform: translateY(40px);
+  gap: 30px;
+  /* z-index: 1000; */
+  /* background-color: red; */
+}
+.scroll-container-product {
+  display: flex;
+  position: relative;
+  overflow-x: scroll;
+  height: 400px;
+  width: 100vw;
+  scrollbar-width: none;
+  transform: translateY(80px);
+  /* background-color: red; */
+  /* gap: 30px; */
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+/* Card Styles */
+.card {
+  position: absolute;
+  width: 150px;
+  height: 200px;
+  background: #e07b7b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: top 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Custom Scrollbar Styles */
+.scrollbar {
+  width: 80%;
+  margin-top: 20px;
+  appearance: none;
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  z-index: -2;
+}
+
+.scrollbar::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #0070f3;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+.scrollbar::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #0070f3;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+/* Hide Dummy Cards */
+.dummy-card {
+  visibility: hidden;
+}
+
+/* Custom Circular Scrollbar */
+/* .circular-scrollbar {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  margin: 20px auto;
+} */
+.circular-scrollbar {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  margin: 20px auto;
+}
+
+.scroll-path {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.scroll-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #0070f3;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }

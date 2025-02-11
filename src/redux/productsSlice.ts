@@ -10,6 +10,7 @@ interface Product {
   photoURL: string;
   price: number;
   productCategory: string;
+  rating:string;
 }
 
 // Initial state

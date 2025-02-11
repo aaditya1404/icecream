@@ -21,7 +21,7 @@ import { firestore as db } from "./clientApp";
 
 
 interface AppUserModel {
-  uid:string
+  uid: string
   name: string;
   phone: string;
   photoURL: string;
@@ -33,7 +33,7 @@ interface Review {
   isGood: boolean;
   productId: string;
   text: string;
-  createdAt: any; 
+  createdAt: any;
 }
 
 // -----------------------------
@@ -60,24 +60,57 @@ export async function addUser(
   }
 }
 
+// /**
+//  * Retrieve a user by their document ID.
+//  * @param userId - The ID of the user.
+//  * @returns The user data (with id) or null if not found.
+//  */
+// export async function getUserById(
+//   userId: string
+// ): Promise<Record<string, any> | null> {
+//   if (!userId) throw new Error("Invalid userId");
+//   const userDocRef = doc(db, "appUsers", userId);
+
+//   console.log("userDocRef" ,userDocRef);
+
+//   const docSnap = await getDoc(userDocRef);
+
+//   console.log(docSnap.id);
+
+//   console.log("userDocSnap",docSnap.data());
+//   if (docSnap.exists()) {
+//     return { id: docSnap.id, ...docSnap.data() };
+//   }
+//   return null;
+// }
 /**
- * Retrieve a user by their document ID.
- * @param userId - The ID of the user.
- * @returns The user data (with id) or null if not found.
- */
+* Retrieve a user by their UID field.
+* @param userId - The UID of the user.
+* @returns The user data (with document id) or null if not found.
+*/
 export async function getUserById(
   userId: string
 ): Promise<Record<string, any> | null> {
   if (!userId) throw new Error("Invalid userId");
-  const userDocRef = doc(db, "appUsers", userId);
-  console.log("userDocRef" ,userDocRef);
-  const docSnap = await getDoc(userDocRef);
-  console.log(docSnap.id);
-  console.log("userDocSnap",docSnap.data());
-  if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() };
+  try {
+    // Query the appUsers collection where uid equals userId
+    const usersCollectionRef = collection(db, "appUsers");
+    const q = query(usersCollectionRef, where("uid", "==", userId));
+    const querySnapshot = await getDocs(q);
+    // Check if any document matches
+    if (!querySnapshot.empty) {
+      const docSnap = querySnapshot.docs[0]; // Get the first matching document
+      console.log("Found document:", docSnap.id);
+      console.log("userDocSnap data:", docSnap.data());
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      console.log("No matching user found.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching user by UID:", error);
+    return null;
   }
-  return null;
 }
 
 /**
@@ -90,9 +123,34 @@ export async function updateUser(
   updateData: Record<string, any>
 ): Promise<void> {
   if (!userId) throw new Error("Invalid userId");
-  const userDocRef = doc(db, "users", userId);
-  await updateDoc(userDocRef, updateData);
+
+  try {
+    // Step 1: Find the user document using uid (same as getUserById)
+    const usersCollectionRef = collection(db, "appUsers");
+    const q = query(usersCollectionRef, where("uid", "==", userId));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const userDocRef = doc(db, "appUsers", querySnapshot.docs[0].id);
+
+      // Step 2: Update the found document
+      await updateDoc(userDocRef, updateData);
+      console.log("User updated successfully:", userId);
+    } else {
+      console.log("No matching user found to update.");
+    }
+  } catch (error) {
+    console.error("Error updating user:", error);
+  }
 }
+// export async function updateUser(
+//   userId: string,
+//   updateData: Record<string, any>
+// ): Promise<void> {
+//   if (!userId) throw new Error("Invalid userId");
+//   const userDocRef = doc(db, "users", userId);
+//   await updateDoc(userDocRef, updateData);
+// }
 
 /**
  * updateUserPhotoReference:
@@ -190,18 +248,18 @@ export async function updateProductImageReference(
 // -----------------------------
 
 export async function addReview(
-  reviewData: Omit<Review, "reviewId" | "createdAt"> 
+  reviewData: Omit<Review, "reviewId" | "createdAt">
 ): Promise<Review> {
   try {
     const reviewRef = await addDoc(collection(db, "reviews"), {
       ...reviewData,
-      createdAt: Timestamp.now(), 
+      createdAt: Timestamp.now(),
     });
 
     return {
       reviewId: reviewRef.id,
       ...reviewData,
-      createdAt: Timestamp.now().toDate().toISOString(), 
+      createdAt: Timestamp.now().toDate().toISOString(),
     };
   } catch (error) {
     console.error("Error adding review:", error);

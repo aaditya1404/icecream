@@ -5,7 +5,7 @@ import { firestore as db } from "../firebase/clientApp";
 interface Review {
   reviewId: string;  
   authorUserId: string;
-  isGood: boolean;
+  // isGood: boolean;
   productId: string;
   text: string;
   createdAt: string;
